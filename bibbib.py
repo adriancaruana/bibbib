@@ -70,15 +70,29 @@ class Validator:
     def run(self):
         self._get_entries(self.bibtexdb.entries)
         self._check_unique_keys()
-        for e in self._errors:
-            print(e.error_msg)
+        return self._errors
+
+
+def bibbib(bibtex_path: Path = None):
+    cli = not bool(bibtex_path)
+    if cli:
+        if len(sys.argv[1:]) != 1:
+            raise ValueError(f"Usage: bibbib /path/to/ref.bib")
+        bibtex_path = Path(sys.argv[1])
+    if not Path(bibtex_path).exists():
+        raise ValueError(f"No bibtex file exists at: {bibtex_path=}")
+    bibtexdb = reader(Path(bibtex_path))
+    errors = Validator(bibtexdb=bibtexdb).run()
+    if cli:
+        if errors:
+            for e in errors:
+                print(e.error_msg)
+            print(f"Found {len(errors)} errors in bibtex! 💥 💔 💥")
+        else:
+            print("No errors found in bibtex! ✨ 🍰 ✨")
+    if not cli:
+        return errors
 
 
 if __name__ == "__main__":
-    if len(sys.argv[1:]) != 1:
-        raise ValueError(f"")
-    if not (bibtex_path := Path(sys.argv[1])).exists():
-        raise ValueError(f"No bibtex file exists at: {bibtex_path=}")
-
-    bibtexdb = reader(Path(bibtex_path))
-    Validator(bibtexdb=bibtexdb).run()
+    bibbib()
