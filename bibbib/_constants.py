@@ -1,8 +1,8 @@
 import dataclasses
 from typing import List, Dict
 
-from _errors import FieldError, Error
-from _types import EntryType, FieldType
+from ._errors import FieldError, Error
+from ._types import EntryType, FieldType
 
 
 FIELD_LUT = {e.name.lower(): e for e in FieldType}

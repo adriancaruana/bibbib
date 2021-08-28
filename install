@@ -1,0 +1,3 @@
+#!/bin/bash
+python3 -m pip uninstall bibbib -y && \  # Uninstall old versions
+    python3 setup.py install --user      # Install new version if tests succeed

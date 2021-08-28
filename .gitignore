@@ -1,1 +1,6 @@
 *~
+__pycache__
+bibbib.egg-info
+bibbib/__pycache__
+build
+dist

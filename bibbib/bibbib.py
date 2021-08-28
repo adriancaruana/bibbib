@@ -10,18 +10,18 @@ from typing import Iterable, List
 
 import bibtexparser
 
-import _constants
-from _errors import Error, GlobalError, EntryError, FieldError
-from _types import EntryType, FieldType
+import bibbib._constants
+from ._errors import Error, GlobalError, EntryError, FieldError
+from ._types import EntryType, FieldType
 
 
 PARSER = bibtexparser.bparser.BibTexParser(common_strings=True)
 ENTRY_LUT = {
     cls.__name__.lower(): cls
-    for _, cls in inspect.getmembers(_constants)
+    for _, cls in inspect.getmembers(bibbib._constants)
     if inspect.isclass(cls)
-    and issubclass(cls, _constants.Entry)
-    and cls is not _constants.Entry
+    and issubclass(cls, bibbib._constants.Entry)
+    and cls is not bibbib._constants.Entry
 }
 
 
@@ -73,7 +73,7 @@ class Validator:
         return self._errors
 
 
-def bibbib(bibtex_path: Path = None):
+def bibbib(bibtex_path: Path = None, report: bool = False):
     cli = not bool(bibtex_path)
     if cli:
         if len(sys.argv[1:]) != 1:
@@ -83,7 +83,7 @@ def bibbib(bibtex_path: Path = None):
         raise ValueError(f"No bibtex file exists at: {bibtex_path=}")
     bibtexdb = reader(Path(bibtex_path))
     errors = Validator(bibtexdb=bibtexdb).run()
-    if cli:
+    if cli or report:
         if errors:
             for e in errors:
                 print(e.error_msg)
